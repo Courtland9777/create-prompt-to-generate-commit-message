@@ -10,6 +10,9 @@ function CopyGitDiffPromptToClipboard {
     None
     #>
 
+    Add-Type -AssemblyName System.Windows.Forms
+
+
     # Check if git is available on the system
     if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
         Write-Error "git is not found on this system. Please install git or ensure it's available in PATH."
@@ -23,7 +26,7 @@ function CopyGitDiffPromptToClipboard {
     }
 
     try {
-        $diffOutput = git diff --color=always HEAD
+        $diffOutput = git diff HEAD
     } catch {
         Write-Error "An error occurred while getting the git diff. Details: $($_.Exception.Message)"
         return
@@ -46,7 +49,7 @@ $diffOutput
 "@
 
     try {
-        [Clipboard]::SetText($message)
+        [System.Windows.Forms.Clipboard]::SetText($message)
         Write-Output "Copied to Clipboard."
     } catch {
         Write-Error "Failed to copy the message to the clipboard. Details: $($_.Exception.Message)"
